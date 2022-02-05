@@ -15,6 +15,7 @@ class ApiCategoryController extends Controller
             'name' => $request->post('name')
         ]);
         $categoryId = Category::latest()->first()->id;
+
         return response([], 201)->withHeaders([
             'Location' => '/category/' . $categoryId
         ]);
@@ -24,9 +25,11 @@ class ApiCategoryController extends Controller
     {
         $user = $request->user()->id;
         $category = Category::whereId($category)->firstOrFail();
+
         if ($user != $category->user_id) {
             return response([], 403);
         }
+
         return response($category);
     }
 
@@ -34,9 +37,11 @@ class ApiCategoryController extends Controller
     {
         $user = $request->user()->id;
         $categories = Category::whereUserId($user)->get();
+
         if (!$categories) {
             return response([], 403);
         }
+
         return response($categories);
     }
 
@@ -44,9 +49,11 @@ class ApiCategoryController extends Controller
     {
         $user = $request->user()->id;
         $category = Category::whereId($category)->firstOrFail();
+
         if ($user != $category->user_id) {
             return response([], 403);
         }
+
         $category->update($request->all());
 
         return response($category);
@@ -62,6 +69,7 @@ class ApiCategoryController extends Controller
         }
 
         $category->delete();
+
         return response([], 204);
     }
 }

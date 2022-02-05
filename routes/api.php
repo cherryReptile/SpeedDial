@@ -36,6 +36,6 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::get('/dials', [ApiDialController::class, 'getAll']);
     Route::patch('/edit/dial/{dial}', [ApiDialController::class, 'edit']);
     Route::delete('/del/dial/{dial}', [ApiDialController::class, 'delete']);
-    Route::get('/speed/dial/{dial}', [ApiSpeedDialController::class, 'get']);
+    Route::get('/speed/dial/{category}', [ApiSpeedDialController::class, 'get']);
     Route::get('/speed/dials', [ApiSpeedDialController::class, 'getAll']);
 });

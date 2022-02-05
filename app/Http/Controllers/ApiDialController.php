@@ -67,9 +67,11 @@ class ApiDialController extends Controller
         $user = $request->user()->id;
         $dial = Dial::whereId($dial)->firstOrFail();
         $category = Category::whereId($dial->category_id)->firstOrFail();
+
         if ($category->user_id != $user) {
             return response([], 403);
         }
+
         $dial->update($request->all());
 
         return response($dial);
@@ -80,9 +82,11 @@ class ApiDialController extends Controller
         $user = $request->user()->id;
         $dial = Dial::whereId($dial)->firstOrFail();
         $category = Category::whereId($dial->category_id)->firstOrFail();
+
         if ($category->user_id != $user) {
             return response([], 403);
         }
+
         $dial->delete();
 
         return response([], 204);
