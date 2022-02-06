@@ -18,6 +18,12 @@ class ApiDialController extends Controller
     {
         $user = $request->user()->id;
         $category = Category::whereId($category)->firstOrFail();
+        $url = $request->post('doc');
+
+        if(filter_var($url, FILTER_VALIDATE_URL) === false){
+            return response([], 400);
+        }
+
         $document = new Document($request->post('doc'), true);
         $title = $document->first('title')->text();
         $description = (string)$document->first('meta[name=description]')->getAttribute('content');
