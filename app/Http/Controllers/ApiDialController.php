@@ -24,7 +24,7 @@ class ApiDialController extends Controller
             return response([], 400);
         }
 
-        $document = new Document($request->post('doc'), true);
+        $document = new Document($url, true);
         $title = $document->first('title')->text();
         $description = (string)$document->first('meta[name=description]')->getAttribute('content');
 
