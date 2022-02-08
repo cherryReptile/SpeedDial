@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use App\Http\Resources\DialCollection;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -12,18 +13,15 @@ use DiDom\Document;
 use DiDom\Query;
 use phpDocumentor\Reflection\Types\Boolean;
 
-class ApiDialController extends Controller
+class DialController extends Controller
 {
     public function add($category, Request $request)
     {
         $user = $request->user()->id;
         $category = Category::whereId($category)->firstOrFail();
-        $url = $request->post('doc');
-
-        if(filter_var($url, FILTER_VALIDATE_URL) === false){
-            return response([], 400);
-        }
-
+        $url = $request->validate([
+            'doc' => 'required|url'
+        ]);
         $document = new Document($url, true);
         $title = $document->first('title')->text();
         $description = (string)$document->first('meta[name=description]')->getAttribute('content');

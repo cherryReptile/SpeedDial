@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use App\Models\Dial;
 use Illuminate\Http\Request;
 
-class ApiSpeedDialController extends Controller
+class SpeedDialController extends Controller
 {
     public function get($category, Request $request)
     {

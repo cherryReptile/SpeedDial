@@ -1,19 +1,26 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use phpDocumentor\Reflection\DocBlock\Tags\Return_;
 
-class ApiCategoryController extends Controller
+class CategoryController extends Controller
 {
     public function add(Request $request)
     {
         $user = \Auth::user();
-        $user->category()->create([
-            'name' => $request->post('name')
+        $name = $request->validate([
+            'name' => 'required|max:255'
         ]);
+
+        $user->category()->create([
+            'name' => $name
+        ]);
+
         $categoryId = Category::latest()->first()->id;
 
         return response([], 201)->withHeaders([
