@@ -76,7 +76,7 @@ class User extends Authenticatable
 
     public function category(): HasMany
     {
-        return $this->hasMany(Category::class, 'user_id', 'id')->orderBy('id');
+        return $this->hasMany(Category::class, 'user_id', 'id');
     }
 
     public function dialThroughUser()

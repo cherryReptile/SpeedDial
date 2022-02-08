@@ -38,7 +38,7 @@ class Category extends Model
 
     public function dial(): HasMany
     {
-        return $this->hasMany(Dial::class, 'category_id', 'id');
+        return $this->hasMany(Dial::class, 'category_id', 'id')->orderBy('id');
     }
 
     public function user(): BelongsTo
