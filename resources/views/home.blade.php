@@ -24,13 +24,13 @@
             <input type="text" name="doc">
             <button type="submit">Добавить dial</button>
         </form>
+        @error("dial{$category->id}")
+        <div style="color: red">{{ $message }}</div>
+        @enderror
         <form action="{{route('category.delete', ['category' => $category->id])}}" method="post">
             @csrf
             <button type="submit">Удалить категорию</button>
         </form>
-        @error("message.{$category->id}")
-        <div style="color: red">{{ $message }}</div>
-        @enderror
 
         <ul>
             @foreach($category->dial as $dial)

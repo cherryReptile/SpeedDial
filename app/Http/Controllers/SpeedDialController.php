@@ -36,11 +36,14 @@ class SpeedDialController extends Controller
     public function dialCreate($category, Request $request)
     {
         $category = Category::whereId($category)->firstOrFail();
-//        $url = $request->validate([
-//            'doc' => 'required|url'
-//        ]);
-        if (!$request->post('doc')) {
-            return redirect()->back()->withErrors(['dial' => 'Не передан url']);
+        $validator = \Validator::make($request->all(), [
+            'doc' => 'required|url'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors([
+                'dial' . $category->id => 'Нужен url'
+            ]);
         }
 
         $document = new Document($request->post('doc'), true);
