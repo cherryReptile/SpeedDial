@@ -20,7 +20,7 @@ class CategoryResource extends JsonResource
             'user_id' => $this->user_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'dials' => DialResource::collection($this->dial)
+            'dials' => DialResource::collection($this->whenLoaded('dial'))
         ];
     }
 }

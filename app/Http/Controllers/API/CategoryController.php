@@ -4,9 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use phpDocumentor\Reflection\DocBlock\Tags\Return_;
 
 class CategoryController extends Controller
 {
@@ -18,7 +18,7 @@ class CategoryController extends Controller
         ]);
 
         $user->category()->create([
-            'name' => $name
+            'name' => $name['name']
         ]);
 
         $categoryId = Category::latest()->first()->id;
@@ -37,7 +37,7 @@ class CategoryController extends Controller
             return response([], 403);
         }
 
-        return response($category);
+        return response(new CategoryResource($category));
     }
 
     public function getAll(Request $request)
@@ -49,7 +49,7 @@ class CategoryController extends Controller
             return response([], 403);
         }
 
-        return response($categories);
+        return response(CategoryResource::collection($categories));
     }
 
     public function edit($category, Request $request)
@@ -63,7 +63,7 @@ class CategoryController extends Controller
 
         $category->update($request->all());
 
-        return response($category);
+        return response(new CategoryResource($category));
     }
 
     public function delete($category, Request $request)

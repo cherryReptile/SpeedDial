@@ -13,16 +13,15 @@ class SpeedDialController extends Controller
     public function get($category, Request $request)
     {
         $user = $request->user()->id;
+        $category = Category::whereId($category)->firstOrFail();
 
-        if (Category::whereId($category)->firstOrFail()->user_id != $user) {
+        if ($category->user_id != $user) {
             return response([], 403);
         }
 
-        $categoryWithRelation = Category::with('dial')->findOrFail($category);
+        $categoryWithRelation = new CategoryResource($category->load('dial'));
 
-        $speedDial = new CategoryResource($categoryWithRelation);
-
-        return response($speedDial);
+        return response($categoryWithRelation);
     }
 
     public function getAll(Request $request)

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoryResource;
 use App\Http\Resources\DialCollection;
+use App\Http\Resources\DialResource;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -22,7 +24,7 @@ class DialController extends Controller
         $url = $request->validate([
             'doc' => 'required|url'
         ]);
-        $document = new Document($url, true);
+        $document = new Document($url['doc'], true);
         $title = $document->first('title')->text();
         $description = (string)$document->first('meta[name=description]')->getAttribute('content');
 
@@ -54,7 +56,7 @@ class DialController extends Controller
             return response([], 403);
         }
 
-        return response($dial);
+        return response(new DialResource($dial));
     }
 
     public function getAll(Request $request)
@@ -63,7 +65,7 @@ class DialController extends Controller
         $request->user();
         $dials = $user->dialThroughUser()->get();
 
-        return response($dials);
+        return response(DialResource::collection($dials));
     }
 
     public function edit($dial, Request $request)
@@ -78,7 +80,7 @@ class DialController extends Controller
 
         $dial->update($request->all());
 
-        return response($dial);
+        return response(new DialResource($dial));
     }
 
     public function delete($dial, Request $request)
