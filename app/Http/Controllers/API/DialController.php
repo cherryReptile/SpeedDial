@@ -19,19 +19,18 @@ class DialController extends Controller
 {
     public function add($category, Request $request)
     {
-        $user = $request->user()->id;
         $category = Category::whereId($category)->firstOrFail();
+
+        if ($request->user()->cannot('view', $category)) {
+            return response([], 403);
+        }
+
         $url = $request->validate([
             'doc' => 'required|url'
         ]);
         $document = new Document($url['doc'], true);
         $title = $document->first('title')->text();
         $description = (string)$document->first('meta[name=description]')->getAttribute('content');
-
-        if ($user != $category->user_id) {
-            return response([], 403);
-        }
-
         $category->dial()->create([
             'title' => $title,
             'description' => $description,
@@ -48,11 +47,10 @@ class DialController extends Controller
 
     public function get($dial, Request $request)
     {
-        $user = $request->user()->id;
         $dial = Dial::whereId($dial)->firstOrFail();
         $category = Category::whereId($dial->category_id)->firstOrFail();
 
-        if ($user != $category->user_id) {
+        if ($request->user()->cannot('view', $category)) {
             return response([], 403);
         }
 
@@ -62,7 +60,6 @@ class DialController extends Controller
     public function getAll(Request $request)
     {
         $user = \Auth::user();
-        $request->user();
         $dials = $user->dialThroughUser()->get();
 
         return response(DialResource::collection($dials));
@@ -70,11 +67,10 @@ class DialController extends Controller
 
     public function edit($dial, Request $request)
     {
-        $user = $request->user()->id;
         $dial = Dial::whereId($dial)->firstOrFail();
         $category = Category::whereId($dial->category_id)->firstOrFail();
 
-        if ($category->user_id != $user) {
+        if ($request->user()->cannot('view', $category)) {
             return response([], 403);
         }
 
@@ -85,11 +81,10 @@ class DialController extends Controller
 
     public function delete($dial, Request $request)
     {
-        $user = $request->user()->id;
         $dial = Dial::whereId($dial)->firstOrFail();
         $category = Category::whereId($dial->category_id)->firstOrFail();
 
-        if ($category->user_id != $user) {
+        if ($request->user()->cannot('view', $category)) {
             return response([], 403);
         }
 

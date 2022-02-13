@@ -12,10 +12,9 @@ class SpeedDialController extends Controller
 {
     public function get($category, Request $request)
     {
-        $user = $request->user()->id;
         $category = Category::whereId($category)->firstOrFail();
 
-        if ($category->user_id != $user) {
+        if ($request->user()->cannot('view', $category)) {
             return response([], 403);
         }
 

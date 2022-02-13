@@ -30,10 +30,9 @@ class CategoryController extends Controller
 
     public function get($category, Request $request)
     {
-        $user = $request->user()->id;
         $category = Category::whereId($category)->firstOrFail();
 
-        if ($user != $category->user_id) {
+        if ($request->user()->cannot('view', $category)) {
             return response([], 403);
         }
 
@@ -45,19 +44,14 @@ class CategoryController extends Controller
         $user = $request->user()->id;
         $categories = Category::whereUserId($user)->get();
 
-        if (!$categories) {
-            return response([], 403);
-        }
-
         return response(CategoryResource::collection($categories));
     }
 
     public function edit($category, Request $request)
     {
-        $user = $request->user()->id;
         $category = Category::whereId($category)->firstOrFail();
 
-        if ($user != $category->user_id) {
+        if ($request->user()->cannot('update', $category)) {
             return response([], 403);
         }
 
@@ -68,10 +62,9 @@ class CategoryController extends Controller
 
     public function delete($category, Request $request)
     {
-        $user = $request->user()->id;
         $category = Category::whereId($category)->firstOrFail();
 
-        if ($user != $category->user_id) {
+        if ($request->user()->cannot('delete', $category)) {
             return response([], 403);
         }
 
