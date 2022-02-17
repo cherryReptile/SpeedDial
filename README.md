@@ -1,1 +1,1 @@
-## Simple SpeedDIal service with api
+## Simple SpeedDIal service
